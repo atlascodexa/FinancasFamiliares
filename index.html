@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão Financeira Familiar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+    <nav class="bg-purple-700 text-white p-4 shadow-lg flex justify-between items-center">
+        <h1 class="text-xl font-bold">Bruno Finance</h1>
+        <div id="auth-section">
+            <button id="login-btn" class="bg-white text-purple-700 px-4 py-2 rounded-lg font-semibold">Entrar com Google</button>
+            <span id="user-info" class="hidden"></span>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-6 hidden" id="app-content">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-green-500">
+                <p class="text-gray-500 text-sm">Total Entradas</p>
+                <h2 id="total-income" class="text-2xl font-bold text-green-600">R$ 0,00</h2>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-red-500">
+                <p class="text-gray-500 text-sm">Total Saídas</p>
+                <h2 id="total-expense" class="text-2xl font-bold text-red-600">R$ 0,00</h2>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-purple-500">
+                <p class="text-gray-500 text-sm">Saldo Atual</p>
+                <h2 id="total-balance" class="text-2xl font-bold text-gray-800">R$ 0,00</h2>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-white p-6 rounded-2xl shadow-sm">
+                <h3 class="font-bold mb-4">Nova Transação</h3>
+                <form id="finance-form" class="space-y-4">
+                    <input type="text" id="desc" placeholder="Descrição (ex: Aluguel)" class="w-full p-2 border rounded-lg" required>
+                    <input type="number" id="amount" placeholder="Valor (R$)" class="w-full p-2 border rounded-lg" required>
+                    <select id="type" class="w-full p-2 border rounded-lg">
+                        <option value="income">Entrada</option>
+                        <option value="expense">Saída</option>
+                    </select>
+                    <button type="submit" class="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition">Adicionar</button>
+                </form>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm">
+                <canvas id="financeChart"></canvas>
+            </div>
+        </div>
+
+        <div class="mt-8 bg-white rounded-2xl shadow-sm overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="p-4">Descrição</th>
+                        <th class="p-4">Valor</th>
+                        <th class="p-4">Tipo</th>
+                        <th class="p-4">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction-list"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
