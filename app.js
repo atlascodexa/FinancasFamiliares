@@ -16,9 +16,7 @@ apiKey: "AIzaSyBGZwBzwmkKFg38LUai1QQSvrNNGHBhy9E",
 
 // 3. Inicialização
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
+const analytics = getAnalytics(app);
 
 // Elementos da Interface
 const loginScreen = document.getElementById('login-screen');
