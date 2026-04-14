@@ -1,6 +1,12 @@
+// FORMA CORRETA PARA GITHUB PAGES (CDN)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, onSnapshot, deleteDoc, doc, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// Suas configurações do Firebase abaixo...
+const firebaseConfig = {
+  // ... (mantenha suas chaves aqui)
+};
 
 // COLOQUE SEUS DADOS AQUI NOVAMENTE
 const firebaseConfig = {
