@@ -1,9 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, query, onSnapshot, deleteDoc, doc, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+// COLOQUE SEUS DADOS AQUI NOVAMENTE
 const firebaseConfig = {
-  apiKey: "AIzaSyBGZwBzwmkKFg38LUai1QQSvrNNGHBhy9E",
+apiKey: "AIzaSyBGZwBzwmkKFg38LUai1QQSvrNNGHBhy9E",
   authDomain: "financasfamiliares-c898b.firebaseapp.com",
   projectId: "financasfamiliares-c898b",
   storageBucket: "financasfamiliares-c898b.firebasestorage.app",
@@ -17,67 +18,35 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-// Elementos da UI
-const loginBtn = document.getElementById('login-btn');
+// Elementos
+const loginScreen = document.getElementById('login-screen');
 const appContent = document.getElementById('app-content');
-const form = document.getElementById('finance-form');
-const list = document.getElementById('transaction-list');
+const loginBtn = document.getElementById('login-btn');
+const logoutBtn = document.getElementById('logout-btn');
 
-// Login
-loginBtn.onclick = () => signInWithPopup(auth, provider);
+// Lógica de Login
+loginBtn.onclick = async () => {
+    try {
+        await signInWithPopup(auth, provider);
+    } catch (error) {
+        console.error("Erro no login:", error);
+        document.getElementById('auth-error').classList.remove('hidden');
+    }
+};
+
+logoutBtn.onclick = () => signOut(auth);
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        loginBtn.classList.add('hidden');
+        loginScreen.classList.add('hidden');
         appContent.classList.remove('hidden');
+        document.getElementById('user-name').innerText = `Olá, ${user.displayName.split(' ')[0]}`;
         loadData(user.uid);
+    } else {
+        loginScreen.classList.remove('hidden');
+        appContent.classList.add('hidden');
     }
 });
 
-// Salvar Dados
-form.onsubmit = async (e) => {
-    e.preventDefault();
-    await addDoc(collection(db, `users/${auth.currentUser.uid}/transactions`), {
-        desc: document.getElementById('desc').value,
-        amount: parseFloat(document.getElementById('amount').value),
-        type: document.getElementById('type').value,
-        date: new Date()
-    });
-    form.reset();
-};
-
-// Carregar e Atualizar UI
-function loadData(uid) {
-    const q = query(collection(db, `users/${uid}/transactions`));
-    onSnapshot(q, (snapshot) => {
-        let html = '';
-        let income = 0, expense = 0;
-        
-        snapshot.forEach((docSnap) => {
-            const data = docSnap.data();
-            const isIncome = data.type === 'income';
-            isIncome ? income += data.amount : expense += data.amount;
-
-            html += `
-                <tr class="border-t">
-                    <td class="p-4">${data.desc}</td>
-                    <td class="p-4 ${isIncome ? 'text-green-600' : 'text-red-600'}">R$ ${data.amount.toFixed(2)}</td>
-                    <td class="p-4 text-sm uppercase text-gray-500">${isIncome ? 'Entrada' : 'Saída'}</td>
-                    <td class="p-4">
-                        <button onclick="deleteItem('${docSnap.id}')" class="text-red-500 hover:underline">Excluir</button>
-                    </td>
-                </tr>
-            `;
-        });
-        list.innerHTML = html;
-        updateDashboard(income, expense);
-    });
-}
-
-function updateDashboard(inc, exp) {
-    document.getElementById('total-income').innerText = `R$ ${inc.toFixed(2)}`;
-    document.getElementById('total-expense').innerText = `R$ ${exp.toFixed(2)}`;
-    document.getElementById('total-balance').innerText = `R$ ${(inc - exp).toFixed(2)}`;
-}
-
-window.deleteItem = (id) => deleteDoc(doc(db, `users/${auth.currentUser.uid}/transactions`, id));
+// O restante da função loadData e salvar dados permanece igual à versão anterior
+// (Adicione o restante do código de salvamento e tabela aqui conforme enviado antes)
